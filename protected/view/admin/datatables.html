@@ -1,0 +1,73 @@
+<!--
+	重点，1 表格ID
+	      2 不参加排序的列
+		  3 数据源 默认值是当前模块当前控制器下的getdata
+		  
+		   searching: false, 搜索 
+           ordering:  false  排序
+-->
+	<script>
+		var datatables_set=[];
+		//不参与排序的字段列表
+		  datatables_set['no_order']=[5];
+		 
+		//数据源,使用服务器模式
+		datatables_set['bServerSide']=true;
+		//服务器数据源
+		datatables_set['sAjaxSource']="<{url c='admin/gameuser' a='ajaxgetdata'}>";
+		 //默认排序
+		datatables_set['order']=[[0,'asc']]; 
+		//字段列表 columns
+		datatables_set['columns']= [   
+                {"data" : "userID"},  
+                {"data" : "name"},  
+                {"data" : "coupons"},  
+				{"data" : "ranking"},
+				{"data" : "rankState"},
+				{"data" : "updateTime"},
+				{"sDefaultContent": ''},
+                ] 
+	</script>		
+    <{include file='admin/datatables.html'}>
+
+<!-- DataTables CSS -->
+    <link href="<{#I}>sb/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"> 
+    <!-- DataTables Responsive CSS -->
+    <link href="<{#I}>sb/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">		
+    <!-- DataTables JavaScript -->
+    <script src="<{#I}>sb/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="<{#I}>sb/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="<{#I}>sb/vendor/datatables-responsive/dataTables.responsive.js"></script>
+	<script>
+	    var oLanguage_CN= {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "没有检索到数据",
+                 "sSearch": "搜索:",
+                "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "前一页",
+                "sNext": "后一页",
+                "sLast": "尾页"
+                }                     
+            };
+	 
+		$(function() {
+			$('#dataTables-mytable').DataTable({
+				responsive: true,
+				ordering:  true ,//全部排 序
+				stateSave:false,
+				"bProcessing": true,//开启正在加载中
+				"bServerSide":datatables_set['bServerSide'],//开启服务器模式，这样表格的每个操作将提交到服务器
+				"sAjaxSource":datatables_set['sAjaxSource'],//接口地址
+				"bStateSave":true,//保存表格设定，比如排序或者搜索 
+				"order": datatables_set['order'],//默认排序列
+				"columnDefs": [{ "orderable": false, "targets": datatables_set['no_order']}],
+				"columns":datatables_set['columns'],
+				oLanguage:oLanguage_CN
+			});
+		});
+    </script>
